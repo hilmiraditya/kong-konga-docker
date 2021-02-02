@@ -110,8 +110,7 @@ services:
     image: pantsel/konga:latest
     container_name: konga
     depends_on:
-      konga-database:
-        condition: service_healthy
+      - konga-database
     ports:
       - 1337:1337
     environment:

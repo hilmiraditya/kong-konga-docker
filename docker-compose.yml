@@ -2,10 +2,12 @@ version: '3.7'
 
 volumes:
   kong_data:
+  konga_data:
 
 services:
   kong-migrations:
     image: kong:latest
+    container_name: kong-migrations
     command: kong migrations bootstrap
     depends_on:
       - kong_db
@@ -22,6 +24,7 @@ services:
 
   kong-migrations-up:
     image: kong:latest
+    container_name: kong-migrations-up
     command: kong migrations up && kong migrations finish
     depends_on:
       - kong_db
@@ -38,6 +41,7 @@ services:
 
   kong:
     image: kong:latest
+    container_name: kong
     user: "${KONG_USER:-kong}"
     depends_on:
       - kong_db
@@ -70,6 +74,7 @@ services:
     
   kong_db:
     image: postgres:9.5
+    container_name: kong-db
     environment:
       POSTGRES_DB: kong
       POSTGRES_USER: kong
@@ -87,3 +92,34 @@ services:
     tty: true
     volumes:
       - kong_data:/var/lib/postgresql/data
+
+  konga-database:
+    image: mongo:4.1.5
+    container_name: konga-database
+    volumes:
+      - konga_data:/data/db
+    ports:
+      - 27017:27017
+    healthcheck:
+      test: echo 'db.stats().ok' | mongo localhost:27017/konga --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  konga:
+    image: pantsel/konga:latest
+    container_name: konga
+    depends_on:
+      konga-database:
+        condition: service_healthy
+    volumes:
+      - ./konga_user_seed.js:/app/user_seed.js:ro
+    ports:
+      - 1337:1337
+    environment:
+      DB_ADAPTER: mongo
+      DB_DATABASE: konga
+      DB_HOST: konga-database
+      KONGA_SEED_USER_DATA_SOURCE_FILE: /app/user_seed.js
+      NODE_ENV: production
+    restart: on-failure

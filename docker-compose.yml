@@ -66,7 +66,7 @@ services:
       - "8444:8444/tcp"
     volumes:
       - kong_plugin_data:/usr/local/share/lua/5.1/kong/plugins
-      - kong_log_data:/usr/local/kong/logs
+      - kong_log_data
       - type: bind
         source: ./kong.conf
         target: /etc/kong/kong.conf
@@ -76,6 +76,7 @@ services:
       timeout: 10s
       retries: 10
     restart: on-failure
+    command: bash -c "chmod -R 777 /usr/local/kong"
     deploy:
       restart_policy:
         condition: on-failure

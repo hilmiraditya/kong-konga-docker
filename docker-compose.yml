@@ -76,8 +76,7 @@ services:
       timeout: 10s
       retries: 10
     restart: on-failure
-    command:
-      - chmod -R 777 /usr/local/kong
+    command: chmod -R 777 /usr/local/kong
     deploy:
       restart_policy:
         condition: on-failure

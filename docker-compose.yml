@@ -65,6 +65,9 @@ services:
       - "8444:8444/tcp"
     volumes:
       - kong_plugin_data:/usr/local/share/lua/5.1/kong/plugins
+      - type: bind
+        source: ./kong.conf
+        target: /etc/kong/kong.conf
     healthcheck:
       test: ["CMD", "kong", "health"]
       interval: 10s

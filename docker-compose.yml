@@ -3,6 +3,7 @@ version: '3.7'
 volumes:
   kong_data:
   konga_data:
+  kong_plugin_data:
 
 services:
   kong-migrations:
@@ -62,6 +63,8 @@ services:
       - "8001:8001/tcp"
       - "8443:8443/tcp"
       - "8444:8444/tcp"
+    volumes:
+      - kong_plugin_data:/usr/local/share/lua/5.1/kong/plugins
     healthcheck:
       test: ["CMD", "kong", "health"]
       interval: 10s

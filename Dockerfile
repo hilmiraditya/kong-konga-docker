@@ -41,4 +41,4 @@ RUN set -xe && \
 
 RUN luarocks install json-lua
 
-COPY ./kong-entrypoint.sh /usr/local/bin
+COPY docker-entrypoint.sh /usr/local/bin

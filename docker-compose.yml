@@ -42,11 +42,11 @@ services:
         condition: on-failure
 
   kong:
-    build: 
-      context: ./kong
-      dockerfile: Dockerfile
     container_name: kong
     user: "${KONG_USER:-kong}"
+    build: 
+      context: .
+      dockerfile: Dockerfile
     depends_on:
       - kong_db
     environment:
@@ -70,7 +70,7 @@ services:
       - kong_plugin_data:/usr/local/share/lua/5.1/kong/plugins
       - kong_log_data
       - type: bind
-        source: ./kong/kong.conf
+        source: ./kong.conf
         target: /etc/kong/kong.conf
     healthcheck:
       test: ["CMD", "kong", "health"]
@@ -78,7 +78,6 @@ services:
       timeout: 10s
       retries: 10
     restart: on-failure
-    command: chmod -R 777 /usr/local/kong
     deploy:
       restart_policy:
         condition: on-failure

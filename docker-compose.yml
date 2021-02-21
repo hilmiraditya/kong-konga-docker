@@ -42,7 +42,9 @@ services:
         condition: on-failure
 
   kong:
-    image: kong:latest
+    build: 
+      context: ./kong
+      dockerfile: Dockerfile
     container_name: kong
     user: "${KONG_USER:-kong}"
     depends_on:
@@ -68,7 +70,7 @@ services:
       - kong_plugin_data:/usr/local/share/lua/5.1/kong/plugins
       - kong_log_data
       - type: bind
-        source: ./kong.conf
+        source: ./kong/kong.conf
         target: /etc/kong/kong.conf
     healthcheck:
       test: ["CMD", "kong", "health"]

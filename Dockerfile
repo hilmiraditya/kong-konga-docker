@@ -39,6 +39,4 @@ RUN set -xe && \
         # Test
         lua -v && luarocks
 
-RUN luarocks install json-lua
-
 COPY docker-entrypoint.sh /usr/local/bin

@@ -2,7 +2,6 @@ version: '3.7'
 
 volumes:
   kong_data:
-  kong_log_data:
   konga_data:
   kong_plugin_data:
 
@@ -68,7 +67,6 @@ services:
       - "8444:8444/tcp"
     volumes:
       - kong_plugin_data:/usr/local/share/lua/5.1/kong/plugins
-      - kong_log_data
       - type: bind
         source: ./kong.conf
         target: /etc/kong/kong.conf
